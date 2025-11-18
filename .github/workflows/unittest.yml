@@ -1,0 +1,35 @@
+name: Python CI ##Name of the workflow
+
+# Trigger the workflow on push or pull request events
+on: ##Define the events that trigger the workflow
+    push: #Git push event
+        branches: ##Specify branches to trigger the workflow, could be main or any feature branch like Staging, Dev, etc.
+            - core_branch
+    pull_request:
+        branches:
+            - core_branch
+
+jobs:
+    test: ##Define the types of jobs
+        runs-on: ubuntu-latest ##Define the type of machine to run the job on, Windows, Linux, or MacOS
+
+        steps: ##Define the sequence of tasks to be executed as a part of the job
+        # Step 1: Check out the repository code
+            - name: Check out Code ##Step name
+              uses: actions/checkout@v2 ##Action to check out the repository code
+        # Step 2: Set up Python environment
+            - name: Set up Python ##Step name
+              uses: actions/setup-python@v2 ##Action to set up Python environment
+              with:   
+                python-version: '3.12' ##Specify the Python version to be used
+
+        # Step 3: Install dependencies
+            - name: Install dependencies ##Step name
+              run: | ##Run command to install dependencies
+                python -m pip install --upgrade pip
+                pip install -r requirements.txt
+
+        # Step 4: Run unit tests
+            - name: Run Unit Tests ##Step name  
+              run: | ##Run command to execute unit tests
+                pytest tests/
